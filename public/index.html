@@ -11,24 +11,37 @@
 </head>
 <body>
 
-<aside class="sidebar">
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <h2><span>🏋️</span> מנהל חדר כושר</h2>
+    <i data-lucide="dumbbell" class="logo-icon"></i>
+    <span>מנהל חדר כושר</span>
   </div>
   <nav class="sidebar-nav">
-    <div class="nav-item active" data-view="dashboard"><span class="icon">📊</span> לוח בקרה</div>
-    <div class="nav-item" data-view="trainers"><span class="icon">👨‍💼</span> מאמנים</div>
-    <div class="nav-item" data-view="clients"><span class="icon">👥</span> לקוחות</div>
-    <div class="nav-item" data-view="schedule"><span class="icon">📆</span> יומן אישי</div>
+    <div class="nav-item active" data-view="dashboard">
+      <i data-lucide="layout-dashboard"></i> לוח בקרה
+    </div>
+    <div class="nav-item" data-view="trainers">
+      <i data-lucide="briefcase"></i> מאמנים
+    </div>
+    <div class="nav-item" data-view="clients">
+      <i data-lucide="users"></i> לקוחות
+    </div>
+    <div class="nav-item" data-view="schedule">
+      <i data-lucide="calendar-days"></i> יומן אישי
+    </div>
   </nav>
 </aside>
 
 <main class="main">
   <header class="topbar">
-    <h1 id="page-title">לוח בקרה</h1>
     <div class="topbar-right">
-      <span id="current-date" class="topbar-date"></span>
+      <button type="button" class="hamburger" id="btn-hamburger" title="תפריט">
+        <i data-lucide="menu"></i>
+      </button>
+      <h1 id="page-title">לוח בקרה</h1>
     </div>
+    <span id="current-date" class="topbar-date"></span>
   </header>
 
   <div class="content">
@@ -40,7 +53,10 @@
       </div>
       <div class="table-wrap">
         <div class="table-header">
-          <span class="table-title">📅 אימונים קרובים — 7 ימים הבאים</span>
+          <span class="table-title">
+            <i data-lucide="calendar-clock" class="title-icon"></i>
+            אימונים קרובים — 7 ימים הבאים
+          </span>
         </div>
         <div id="sessions-table-body">
           <div class="loading"><div class="spinner"></div></div>
@@ -54,7 +70,6 @@
         <h2>מאמנים</h2>
       </div>
       <div class="split-layout">
-        <!-- רשימת מאמנים -->
         <div class="split-main">
           <div class="list-card">
             <div class="list-card-header">
@@ -68,15 +83,12 @@
             </div>
           </div>
         </div>
-        <!-- פאנל צד -->
         <div class="split-aside">
           <div class="aside-card" id="trainer-aside">
             <div class="aside-card-header">
               <h3>הוספת מאמן</h3>
             </div>
-            <div class="aside-card-body" id="trainer-aside-body">
-              <!-- form injected by JS -->
-            </div>
+            <div class="aside-card-body" id="trainer-aside-body"></div>
           </div>
         </div>
       </div>
@@ -88,14 +100,15 @@
         <h2>לקוחות</h2>
         <div class="section-header-actions">
           <div class="search-box">
-            <span class="search-icon">🔍</span>
+            <i data-lucide="search" class="search-icon"></i>
             <input type="text" id="client-search" placeholder="חיפוש...">
           </div>
-          <button type="button" class="btn btn-primary btn-sm" id="btn-add-client">+ הוסף לקוח</button>
+          <button type="button" class="btn btn-primary btn-sm" id="btn-add-client">
+            <i data-lucide="plus"></i> הוסף לקוח
+          </button>
         </div>
       </div>
       <div class="split-layout">
-        <!-- טבלת לקוחות -->
         <div class="split-main">
           <div class="list-card">
             <div class="list-card-header">
@@ -109,16 +122,17 @@
             </div>
           </div>
         </div>
-        <!-- פאנל לקוח -->
         <div class="split-aside">
           <div class="aside-card" id="client-aside">
             <div class="aside-card-header">
               <h3 id="client-aside-title">פרטי לקוח</h3>
-              <button type="button" class="close-btn client-aside-close-btn" id="client-aside-close">✕</button>
+              <button type="button" class="close-btn client-aside-close-btn" id="client-aside-close" title="סגור">
+                <i data-lucide="x"></i>
+              </button>
             </div>
             <div class="aside-card-body" id="client-aside-body">
-              <div class="empty-state" style="padding:32px 16px">
-                <div class="icon">👤</div>
+              <div class="aside-empty-state">
+                <i data-lucide="user" class="empty-icon"></i>
                 <p>בחר לקוח מהרשימה לצפייה בפרטים</p>
               </div>
             </div>
@@ -127,7 +141,7 @@
       </div>
     </section>
 
-    <!-- לוח זמנים -->
+    <!-- יומן אישי -->
     <section id="view-schedule" class="view">
       <div class="schedule-controls">
         <div class="schedule-trainer-pick">
@@ -137,15 +151,19 @@
           </select>
         </div>
         <div class="week-nav">
-          <button type="button" class="btn btn-secondary btn-sm" id="btn-prev-week">&#8249; שבוע קודם</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-prev-week">
+            <i data-lucide="chevron-right"></i> שבוע קודם
+          </button>
           <span class="week-label" id="week-label"></span>
-          <button type="button" class="btn btn-secondary btn-sm" id="btn-next-week">שבוע הבא &#8250;</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-next-week">
+            שבוע הבא <i data-lucide="chevron-left"></i>
+          </button>
           <button type="button" class="btn btn-primary btn-sm" id="btn-today">היום</button>
         </div>
       </div>
       <div id="schedule-content">
         <div class="empty-state">
-          <div class="icon">📆</div>
+          <i data-lucide="calendar-days" class="empty-icon"></i>
           <h3>בחר מאמן כדי להציג את לוח הזמנים</h3>
           <p>בחר את שמך מהרשימה למעלה</p>
         </div>
@@ -158,6 +176,7 @@
 <div id="modal-container"></div>
 <div class="toast-container" id="toast-container"></div>
 
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

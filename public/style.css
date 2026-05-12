@@ -91,7 +91,9 @@ body {
 }
 
 .topbar h1 { font-size: 19px; font-weight: 700; }
-.topbar-right { display: flex; align-items: center; gap: 12px; }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.aside-empty-state { text-align: center; padding: 32px 16px; color: var(--text-muted); }
+.aside-empty-state p { font-size: 13px; }
 .content { padding: 24px 28px; flex: 1; }
 
 /* ── מעברים ───────────────────────────────── */
@@ -814,6 +816,56 @@ tr:hover .row-actions { opacity: 1; }
 /* ── divider ────────────────────────────────── */
 .divider { height: 1px; background: var(--border); margin: 12px 0; }
 
+/* ── lucide icons ───────────────────────────── */
+.lucide {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* sidebar logo */
+.sidebar-logo { display: flex; align-items: center; gap: 10px; }
+.sidebar-logo span { color: white; font-size: 17px; font-weight: 700; }
+.logo-icon.lucide { width: 22px; height: 22px; color: var(--primary-light); }
+
+/* nav items */
+.nav-item .lucide { width: 17px; height: 17px; }
+
+/* stat cards */
+.stat-icon .lucide { width: 36px; height: 36px; }
+
+/* buttons */
+.btn .lucide { width: 14px; height: 14px; }
+
+/* row actions */
+.row-btn .lucide { width: 14px; height: 14px; }
+
+/* close button */
+.close-btn .lucide { width: 14px; height: 14px; }
+
+/* toasts */
+.toast .lucide { width: 14px; height: 14px; }
+
+/* confirm modal */
+.confirm-icon .lucide { width: 40px; height: 40px; color: var(--danger); }
+
+/* empty state */
+.empty-icon { display: block; margin: 0 auto 12px; width: 44px; height: 44px; opacity: 0.35; }
+
+/* table title */
+.title-icon { width: 16px; height: 16px; margin-left: 4px; vertical-align: middle; }
+
+/* search icon */
+.search-icon.lucide { width: 15px; height: 15px; color: var(--text-muted); flex-shrink: 0; }
+
+/* client chip x btn */
+.client-chip button .lucide { width: 11px; height: 11px; }
+
 .topbar-date { font-size: 12px; color: var(--text-muted); }
 
 .section-header-actions { display: flex; gap: 8px; align-items: center; }
@@ -821,3 +873,136 @@ tr:hover .row-actions { opacity: 1; }
 
 .client-aside-close-btn { display: none; }
 .client-aside-close-btn.visible { display: flex; }
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════ */
+
+/* hamburger — hidden on desktop */
+.hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  border: none;
+  background: var(--bg);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+.hamburger .lucide { width: 18px; height: 18px; }
+
+/* sidebar overlay (mobile) */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 99;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+.sidebar-overlay.open { display: block; }
+
+/* ── tablet (≤ 1100px) ──────────────────────── */
+@media (max-width: 1100px) {
+  .sidebar { width: 200px; }
+  .main { margin-right: 200px; }
+
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .stat-card { padding: 28px 20px; }
+  .stat-info h3 { font-size: 40px; }
+  .stat-icon { width: 72px; height: 72px; border-radius: 14px; }
+  .stat-icon .lucide { width: 28px; height: 28px; }
+
+  .split-aside { width: 270px; }
+}
+
+/* ── mobile (≤ 768px) ───────────────────────── */
+@media (max-width: 768px) {
+  /* sidebar slides off to the right */
+  .sidebar {
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    width: 240px;
+    z-index: 200;
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  /* main takes full width */
+  .main { margin-right: 0; }
+
+  /* show hamburger */
+  .hamburger { display: flex; }
+
+  /* topbar */
+  .topbar { padding: 12px 16px; gap: 10px; }
+  .topbar h1 { font-size: 16px; }
+  .topbar-date { display: none; }
+
+  /* content padding */
+  .content { padding: 14px 16px; }
+
+  /* stat grid: 2 columns */
+  .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+  .stat-card { padding: 18px 14px; gap: 12px; }
+  .stat-info h3 { font-size: 28px; }
+  .stat-info p  { font-size: 11px; }
+  .stat-icon { width: 52px; height: 52px; border-radius: 10px; }
+  .stat-icon .lucide { width: 22px; height: 22px; }
+
+  /* split layout: stack vertically */
+  .split-layout { flex-direction: column; gap: 14px; }
+  .split-aside { width: 100%; position: static; }
+
+  /* section header */
+  .section-header { flex-wrap: wrap; gap: 10px; }
+  .section-header h2 { font-size: 16px; }
+  .section-header-actions { width: 100%; justify-content: space-between; }
+  .search-box { flex: 1; min-width: 0; }
+
+  /* tables: horizontal scroll */
+  .list-card { overflow-x: auto; }
+  .table-wrap { overflow-x: auto; }
+
+  /* hide less important table columns */
+  table th:nth-child(4),
+  table td:nth-child(4) { display: none; }
+
+  /* schedule controls */
+  .schedule-controls { flex-direction: column; align-items: stretch; gap: 10px; }
+  .week-nav { justify-content: center; flex-wrap: wrap; gap: 6px; }
+  .week-label { min-width: unset; font-size: 13px; order: -1; width: 100%; text-align: center; }
+
+  /* calendar: allow horizontal scroll */
+  #schedule-content { overflow-x: auto; }
+  .cal-wrapper { min-width: 560px; }
+  .cal-body { max-height: calc(100vh - 260px); }
+
+  /* aside card full width */
+  .aside-card { border-radius: var(--radius); }
+
+  /* form grid on mobile */
+  .field-row { grid-template-columns: 1fr; }
+
+  /* toasts */
+  .toast-container { left: 12px; right: 12px; bottom: 16px; }
+  .toast { max-width: 100%; }
+}
+
+/* ── small mobile (≤ 480px) ────────────────── */
+@media (max-width: 480px) {
+  .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .stat-card { padding: 14px 12px; gap: 10px; }
+  .stat-info h3 { font-size: 24px; }
+  .stat-icon { width: 44px; height: 44px; }
+  .stat-icon .lucide { width: 20px; height: 20px; }
+
+  th, td { padding: 9px 12px; }
+
+  .content { padding: 12px; }
+}

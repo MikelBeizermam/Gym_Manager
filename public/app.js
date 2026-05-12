@@ -1,4 +1,4 @@
-// ── state ─────────────────────────────────────────────────────────────────────
+// ── helpers ───────────────────────────────────────────────────────────────────
 const state = {
   trainers: [],
   clients: [],
@@ -8,6 +8,8 @@ const state = {
 };
 
 const $ = id => document.getElementById(id);
+const ic = name => `<i data-lucide="${name}"></i>`;
+const renderIcons = () => lucide.createIcons();
 
 async function api(path, opts = {}) {
   const res = await fetch('/api' + path, {
@@ -23,8 +25,9 @@ async function api(path, opts = {}) {
 function toast(msg, type = 'success') {
   const el = document.createElement('div');
   el.className = `toast toast-${type}`;
-  el.innerHTML = `<span>${type === 'success' ? '✓' : '✕'}</span> ${msg}`;
+  el.innerHTML = `${ic(type === 'success' ? 'check' : 'x')} ${msg}`;
   $('toast-container').appendChild(el);
+  renderIcons();
   setTimeout(() => {
     el.style.animation = 'fadeOut 0.3s forwards';
     setTimeout(() => el.remove(), 300);
@@ -59,13 +62,13 @@ const LABELS = {
 };
 const lbl = key => LABELS[key] || key;
 
-// ── confirm delete modal ──────────────────────────────────────────────────────
+// ── confirm delete ─────────────────────────────────────────────────────────────
 function confirmDelete({ title, description, onConfirm }) {
   const container = $('modal-container');
   container.innerHTML = `
     <div class="form-overlay" id="modal-overlay">
       <div class="confirm-modal">
-        <div class="confirm-icon">🗑️</div>
+        <div class="confirm-icon">${ic('trash-2')}</div>
         <h3>${title}</h3>
         <p>${description}</p>
         <div class="confirm-actions">
@@ -74,6 +77,7 @@ function confirmDelete({ title, description, onConfirm }) {
         </div>
       </div>
     </div>`;
+  renderIcons();
 
   const close = () => container.innerHTML = '';
   $('confirm-no').addEventListener('click', close);
@@ -138,19 +142,19 @@ async function loadDashboard() {
     const stats = await api('/stats');
     $('stat-grid').innerHTML = `
       <div class="stat-card">
-        <div class="stat-icon">👥</div>
+        <div class="stat-icon">${ic('users')}</div>
         <div class="stat-info"><h3>${stats.total_clients}</h3><p>סה"כ לקוחות</p></div>
       </div>
       <div class="stat-card green">
-        <div class="stat-icon">👨‍💼</div>
+        <div class="stat-icon">${ic('briefcase')}</div>
         <div class="stat-info"><h3>${stats.total_trainers}</h3><p>סה"כ מאמנים</p></div>
       </div>
       <div class="stat-card orange">
-        <div class="stat-icon">📅</div>
+        <div class="stat-icon">${ic('calendar')}</div>
         <div class="stat-info"><h3>${stats.sessions_this_week}</h3><p>אימונים השבוע</p></div>
       </div>
       <div class="stat-card blue">
-        <div class="stat-icon">🏆</div>
+        <div class="stat-icon">${ic('trophy')}</div>
         <div class="stat-info">
           <h3 style="font-size:15px;line-height:1.3">${stats.most_active_trainer?.name || '—'}</h3>
           <p>המאמן הפעיל ביותר</p>
@@ -158,7 +162,12 @@ async function loadDashboard() {
       </div>`;
 
     if (!stats.upcoming_sessions.length) {
-      $('sessions-table-body').innerHTML = `<div class="empty-state"><div class="icon">📅</div><h3>אין אימונים קרובים</h3></div>`;
+      $('sessions-table-body').innerHTML = `
+        <div class="empty-state">
+          ${ic('calendar')}
+          <h3>אין אימונים קרובים</h3>
+        </div>`;
+      renderIcons();
       return;
     }
 
@@ -179,6 +188,7 @@ async function loadDashboard() {
             </tr>`).join('')}
         </tbody>
       </table>`;
+    renderIcons();
   } catch (e) { toast(e.message, 'error'); }
 }
 
@@ -196,7 +206,8 @@ function renderTrainersTable() {
   $('trainer-count').textContent = state.trainers.length;
 
   if (!state.trainers.length) {
-    el.innerHTML = `<div class="empty-state"><div class="icon">👨‍💼</div><h3>אין מאמנים עדיין</h3></div>`;
+    el.innerHTML = `<div class="empty-state">${ic('briefcase')}<h3>אין מאמנים עדיין</h3></div>`;
+    renderIcons();
     return;
   }
 
@@ -234,15 +245,16 @@ function renderTrainersTable() {
               <td>
                 <div class="row-actions">
                   <button type="button" class="row-btn" title="עריכה"
-                    onclick="event.stopPropagation();selectTrainer(${t.trainer_id})">✏️</button>
+                    onclick="event.stopPropagation();selectTrainer(${t.trainer_id})">${ic('pencil')}</button>
                   <button type="button" class="row-btn danger" title="מחיקה"
-                    onclick="event.stopPropagation();deleteTrainer(${t.trainer_id},'${t.first_name} ${t.last_name}')">🗑️</button>
+                    onclick="event.stopPropagation();deleteTrainer(${t.trainer_id},'${t.first_name} ${t.last_name}')">${ic('trash-2')}</button>
                 </div>
               </td>
             </tr>`;
         }).join('')}
       </tbody>
     </table>`;
+  renderIcons();
 }
 
 async function selectTrainer(trainerId) {
@@ -253,8 +265,7 @@ async function selectTrainer(trainerId) {
 }
 
 function showTrainerDetail(trainer) {
-  const aside = $('trainer-aside');
-  aside.querySelector('.aside-card-header h3').textContent = `${trainer.first_name} ${trainer.last_name}`;
+  $('trainer-aside').querySelector('.aside-card-header h3').textContent = `${trainer.first_name} ${trainer.last_name}`;
 
   $('trainer-aside-body').innerHTML = `
     <div class="info-section">
@@ -270,20 +281,29 @@ function showTrainerDetail(trainer) {
       <span style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.3px">לקוחות משויכים</span>
       ${trainer.client_count < trainer.max_clients
         ? `<div class="assign-dropdown" id="assign-drop-${trainer.trainer_id}">
-             <button type="button" class="btn btn-primary btn-sm" onclick="toggleAssignDropdown(${trainer.trainer_id})">+ שיוך</button>
+             <button type="button" class="btn btn-primary btn-sm" onclick="toggleAssignDropdown(${trainer.trainer_id})">
+               ${ic('user-plus')} שיוך
+             </button>
              <div class="assign-dropdown-menu" id="assign-menu-${trainer.trainer_id}"></div>
            </div>`
-        : `<span class="badge badge-inactive" style="font-size:11px">מלא</span>`
+        : `<span class="badge badge-inactive">מלא</span>`
       }
     </div>
     <div id="trainer-clients-list-${trainer.trainer_id}"><div class="loading"><div class="spinner"></div></div></div>
 
     <div class="form-actions-aside" style="margin-top:16px">
-      <button type="button" class="btn btn-secondary btn-sm" onclick="showTrainerForm(${JSON.stringify(trainer).replace(/"/g,'&quot;')})">✏️ עריכה</button>
-      <button type="button" class="btn btn-danger btn-sm" onclick="deleteTrainer(${trainer.trainer_id},'${trainer.first_name} ${trainer.last_name}')">🗑️ מחיקה</button>
-      <button type="button" class="btn btn-ghost btn-sm" style="margin-right:auto" onclick="showTrainerForm()">+ חדש</button>
+      <button type="button" class="btn btn-secondary btn-sm" onclick="showTrainerForm(${JSON.stringify(trainer).replace(/"/g,'&quot;')})">
+        ${ic('pencil')} עריכה
+      </button>
+      <button type="button" class="btn btn-danger btn-sm" onclick="deleteTrainer(${trainer.trainer_id},'${trainer.first_name} ${trainer.last_name}')">
+        ${ic('trash-2')} מחיקה
+      </button>
+      <button type="button" class="btn btn-ghost btn-sm" style="margin-right:auto" onclick="showTrainerForm()">
+        ${ic('plus')} חדש
+      </button>
     </div>`;
 
+  renderIcons();
   loadTrainerClientsList(trainer.trainer_id);
 }
 
@@ -300,8 +320,9 @@ async function loadTrainerClientsList(trainerId) {
       <div class="client-chip">
         <span>${initials(c.first_name, c.last_name)}</span>
         <span>${c.first_name} ${c.last_name}</span>
-        <button onclick="removeAssignment(${c.assignment_id},${trainerId})" title="הסר">✕</button>
+        <button onclick="removeAssignment(${c.assignment_id},${trainerId})" title="הסר">${ic('x')}</button>
       </div>`).join('')}</div>`;
+    renderIcons();
   } catch (e) { toast(e.message, 'error'); }
 }
 
@@ -309,8 +330,7 @@ function showTrainerForm(trainer = null) {
   state.selectedTrainerId = null;
   renderTrainersTable();
   const isEdit = !!trainer;
-  const aside = $('trainer-aside');
-  aside.querySelector('.aside-card-header h3').textContent = isEdit ? 'עריכת מאמן' : 'הוספת מאמן';
+  $('trainer-aside').querySelector('.aside-card-header h3').textContent = isEdit ? 'עריכת מאמן' : 'הוספת מאמן';
 
   $('trainer-aside-body').innerHTML = `
     <div class="field-row">
@@ -324,9 +344,12 @@ function showTrainerForm(trainer = null) {
     </div>
     <div class="field"><label>התמחות</label><input type="text" id="f-spec" value="${trainer?.specialization || ''}" placeholder="כוח ומסה, קרדיו..."></div>
     <div class="form-actions-aside">
-      <button type="button" class="btn btn-primary btn-sm" id="btn-save-trainer">שמור</button>
+      <button type="button" class="btn btn-primary btn-sm" id="btn-save-trainer">
+        ${ic('save')} שמור
+      </button>
       <button type="button" class="btn btn-secondary btn-sm" onclick="showTrainerForm()">ניקוי</button>
     </div>`;
+  renderIcons();
 
   $('btn-save-trainer').addEventListener('click', async () => {
     const body = {
@@ -407,7 +430,8 @@ async function loadClients() {
 function renderClientsTable(clients) {
   $('client-count').textContent = clients.length;
   if (!clients.length) {
-    $('clients-table-body').innerHTML = `<div class="empty-state"><div class="icon">👥</div><h3>לא נמצאו לקוחות</h3></div>`;
+    $('clients-table-body').innerHTML = `<div class="empty-state">${ic('users')}<h3>לא נמצאו לקוחות</h3></div>`;
+    renderIcons();
     return;
   }
   $('clients-table-body').innerHTML = `
@@ -435,12 +459,13 @@ function renderClientsTable(clients) {
             <td>
               <div class="row-actions">
                 <button type="button" class="row-btn danger" title="מחיקה"
-                  onclick="event.stopPropagation();deleteClient(${c.client_id},'${c.first_name} ${c.last_name}')">🗑️</button>
+                  onclick="event.stopPropagation();deleteClient(${c.client_id},'${c.first_name} ${c.last_name}')">${ic('trash-2')}</button>
               </div>
             </td>
           </tr>`).join('')}
       </tbody>
     </table>`;
+  renderIcons();
 }
 
 $('client-search').addEventListener('input', e => {
@@ -456,10 +481,11 @@ function showClientPlaceholder() {
   $('client-aside-title').textContent = 'פרטי לקוח';
   $('client-aside-close').classList.remove('visible');
   $('client-aside-body').innerHTML = `
-    <div class="empty-state" style="padding:32px 16px">
-      <div class="icon">👤</div>
+    <div class="aside-empty-state">
+      <i data-lucide="user" class="empty-icon"></i>
       <p>בחר לקוח מהרשימה לצפייה בפרטים</p>
     </div>`;
+  renderIcons();
 }
 
 async function openClientAside(clientId) {
@@ -529,9 +555,14 @@ async function openClientAside(clientId) {
       </div>
 
       <div class="form-actions-aside">
-        <button type="button" class="btn btn-secondary btn-sm" onclick="showClientFormAside(${JSON.stringify(c).replace(/"/g,'&quot;')})">✏️ עריכה</button>
-        <button type="button" class="btn btn-danger btn-sm" onclick="deleteClient(${c.client_id},'${c.first_name} ${c.last_name}')">🗑️ מחיקה</button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="showClientFormAside(${JSON.stringify(c).replace(/"/g,'&quot;')})">
+          ${ic('pencil')} עריכה
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="deleteClient(${c.client_id},'${c.first_name} ${c.last_name}')">
+          ${ic('trash-2')} מחיקה
+        </button>
       </div>`;
+    renderIcons();
   } catch (e) {
     toast(e.message, 'error');
     $('client-aside-body').innerHTML = `<p style="color:var(--danger);padding:16px">שגיאה בטעינת פרטי הלקוח.</p>`;
@@ -564,9 +595,12 @@ function showClientFormAside(client = null) {
     </div>
     <div class="field"><label>מטרה</label><input type="text" id="cf-goal" value="${client?.goal || ''}" placeholder="ירידה במשקל, בניית שריר..."></div>
     <div class="form-actions-aside">
-      <button type="button" class="btn btn-primary btn-sm" id="btn-save-client">שמור</button>
+      <button type="button" class="btn btn-primary btn-sm" id="btn-save-client">
+        ${ic('save')} שמור
+      </button>
       <button type="button" class="btn btn-secondary btn-sm" onclick="showClientPlaceholder()">ביטול</button>
     </div>`;
+  renderIcons();
 
   $('btn-save-client').addEventListener('click', async () => {
     const body = {
@@ -642,6 +676,12 @@ async function populateScheduleTrainers() {
       opt.textContent = `${t.first_name} ${t.last_name} — ${t.specialization || 'מאמן'}`;
       sel.appendChild(opt);
     });
+    // auto-select first trainer
+    if (trainers.length && !scheduleState.trainerId) {
+      sel.value = trainers[0].trainer_id;
+      scheduleState.trainerId = trainers[0].trainer_id;
+      loadSchedule();
+    }
   } catch (e) { toast(e.message, 'error'); }
 }
 
@@ -655,7 +695,8 @@ async function loadSchedule() {
     renderCalendar(sessions);
   } catch (e) {
     toast(e.message, 'error');
-    $('schedule-content').innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><h3>שגיאה בטעינת לוח הזמנים</h3></div>`;
+    $('schedule-content').innerHTML = `<div class="empty-state"><i data-lucide="alert-triangle" class="empty-icon"></i><h3>שגיאה בטעינת לוח הזמנים</h3></div>`;
+    renderIcons();
   }
 }
 
@@ -715,15 +756,46 @@ function renderCalendar(sessions) {
 $('schedule-trainer-select').addEventListener('change', e => {
   scheduleState.trainerId = e.target.value || null;
   if (scheduleState.trainerId) loadSchedule();
-  else $('schedule-content').innerHTML = `<div class="empty-state"><div class="icon">📆</div><h3>בחר מאמן כדי להציג את לוח הזמנים</h3></div>`;
+  else {
+    $('schedule-content').innerHTML = `
+      <div class="empty-state">
+        <i data-lucide="calendar-days" class="empty-icon"></i>
+        <h3>בחר מאמן כדי להציג את לוח הזמנים</h3>
+      </div>`;
+    renderIcons();
+  }
 });
 
 $('btn-prev-week').addEventListener('click', () => { scheduleState.weekStart.setDate(scheduleState.weekStart.getDate() - 7); updateWeekLabel(); loadSchedule(); });
 $('btn-next-week').addEventListener('click', () => { scheduleState.weekStart.setDate(scheduleState.weekStart.getDate() + 7); updateWeekLabel(); loadSchedule(); });
 $('btn-today').addEventListener('click', () => { scheduleState.weekStart = getWeekStart(new Date()); updateWeekLabel(); loadSchedule(); });
 
+// ── sidebar mobile toggle ─────────────────────────────────────────────────────
+function openSidebar() {
+  $('sidebar').classList.add('open');
+  $('sidebar-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSidebar() {
+  $('sidebar').classList.remove('open');
+  $('sidebar-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+$('btn-hamburger').addEventListener('click', openSidebar);
+$('sidebar-overlay').addEventListener('click', closeSidebar);
+
+// close sidebar when nav item clicked on mobile
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (window.innerWidth <= 768) closeSidebar();
+  });
+});
+
 // ── init ──────────────────────────────────────────────────────────────────────
 $('current-date').textContent = new Date().toLocaleDateString('he-IL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 api('/trainers').then(t => { state.trainers = t; });
 updateWeekLabel();
 loadDashboard();
+renderIcons();
