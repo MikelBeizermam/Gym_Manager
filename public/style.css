@@ -263,7 +263,7 @@ body {
 }
 
 .aside-card-header h3 { font-size: 14px; font-weight: 700; }
-.aside-card-body { padding: 18px; }
+.aside-card-body { padding: 18px; overflow-y: auto; }
 
 /* ── טבלה ─────────────────────────────────── */
 table { width: 100%; border-collapse: collapse; }
@@ -445,7 +445,7 @@ tr:hover .row-actions { opacity: 1; }
 .session-item .session-meta { color: var(--text-muted); }
 
 /* ── client pills ───────────────────────────── */
-.client-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.client-chips { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; }
 
 .client-chip {
   display: inline-flex;
@@ -456,6 +456,8 @@ tr:hover .row-actions { opacity: 1; }
   border-radius: 20px;
   font-size: 12px;
   border: 1px solid var(--border);
+  max-width: 100%;
+  white-space: nowrap;
 }
 
 .client-chip button {
