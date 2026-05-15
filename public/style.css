@@ -214,7 +214,7 @@ body {
 .split-main { flex: 1; min-width: 0; }
 
 .split-aside {
-  width: 320px;
+  width: 380px;
   flex-shrink: 0;
   position: sticky;
   top: 74px;
@@ -250,7 +250,7 @@ body {
   background: white;
   border-radius: var(--radius);
   border: 1.5px solid var(--border);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .aside-card-header {
@@ -260,6 +260,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-radius: var(--radius) var(--radius) 0 0;
 }
 
 .aside-card-header h3 { font-size: 14px; font-weight: 700; }
@@ -921,7 +922,7 @@ tr:hover .row-actions { opacity: 1; }
   .stat-icon { width: 72px; height: 72px; border-radius: 14px; }
   .stat-icon .lucide { width: 28px; height: 28px; }
 
-  .split-aside { width: 270px; }
+  .split-aside { width: 320px; }
 }
 
 /* ── mobile (≤ 768px) ───────────────────────── */
