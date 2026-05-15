@@ -214,7 +214,7 @@ body {
 .split-main { flex: 1; min-width: 0; }
 
 .split-aside {
-  width: 380px;
+  width: 460px;
   flex-shrink: 0;
   position: sticky;
   top: 74px;
