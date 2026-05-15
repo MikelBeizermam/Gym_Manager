@@ -207,15 +207,17 @@ body {
 /* ── split layout ─────────────────────────── */
 .split-layout {
   display: flex;
+  flex-wrap: wrap;
   gap: 18px;
   align-items: flex-start;
 }
 
-.split-main { flex: 1; min-width: 0; }
+.split-main { flex: 1; min-width: min(100%, 340px); }
 
 .split-aside {
-  width: 460px;
-  flex-shrink: 0;
+  flex: 1;
+  min-width: min(100%, 340px);
+  max-width: 460px;
   position: sticky;
   top: 74px;
 }
@@ -923,13 +925,6 @@ tr:hover .row-actions { opacity: 1; }
   .stat-icon { width: 72px; height: 72px; border-radius: 14px; }
   .stat-icon .lucide { width: 28px; height: 28px; }
 
-  .split-aside { width: 320px; }
-}
-
-/* ── medium (≤ 900px) ───────────────────────── */
-@media (max-width: 900px) {
-  .split-layout { flex-direction: column; gap: 14px; }
-  .split-aside { width: 100%; position: static; }
 }
 
 /* ── mobile (≤ 768px) ───────────────────────── */
@@ -965,9 +960,8 @@ tr:hover .row-actions { opacity: 1; }
   .stat-icon { width: 52px; height: 52px; border-radius: 10px; }
   .stat-icon .lucide { width: 22px; height: 22px; }
 
-  /* split layout: stack vertically */
-  .split-layout { flex-direction: column; gap: 14px; }
-  .split-aside { width: 100%; position: static; }
+  /* split aside: remove sticky on mobile */
+  .split-aside { position: static; max-width: 100%; }
 
   /* section header */
   .section-header { flex-wrap: wrap; gap: 10px; }
