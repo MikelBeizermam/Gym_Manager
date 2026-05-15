@@ -281,7 +281,8 @@ th {
   border-bottom: 1px solid var(--border);
 }
 
-td { border-bottom: 1px solid var(--border); color: var(--text); }
+td { border-bottom: 1px solid var(--border); color: var(--text); white-space: nowrap; }
+td.wrap { white-space: normal; }
 tr:last-child td { border-bottom: none; }
 
 tr.clickable { cursor: pointer; transition: background 0.1s; }
@@ -923,6 +924,12 @@ tr:hover .row-actions { opacity: 1; }
   .stat-icon .lucide { width: 28px; height: 28px; }
 
   .split-aside { width: 320px; }
+}
+
+/* ── medium (≤ 900px) ───────────────────────── */
+@media (max-width: 900px) {
+  .split-layout { flex-direction: column; gap: 14px; }
+  .split-aside { width: 100%; position: static; }
 }
 
 /* ── mobile (≤ 768px) ───────────────────────── */
